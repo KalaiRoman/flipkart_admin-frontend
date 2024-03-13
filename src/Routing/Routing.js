@@ -14,7 +14,7 @@ function Routing() {
                 <Route exact path="/home" element={<Home />}></Route>
                 <Route exact path="/product" element={<Products />}></Route>
                 <Route exact path="/orders" element={<Orders />}></Route>
-                <Route exact path="/inventory" element={<Inventory />}></Route>
+                <Route exact path="/sellers" element={<Inventory />}></Route>
 
 
             </Route>

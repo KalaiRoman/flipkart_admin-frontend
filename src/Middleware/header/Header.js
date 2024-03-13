@@ -13,7 +13,7 @@ function Header() {
         {
             id: 2,
             name: "/product",
-            title: "Product"
+            title: "Products"
         },
         {
             id: 3,
@@ -23,12 +23,12 @@ function Header() {
         {
             id: 4,
             name: "/chat",
-            title: "Chat"
+            title: "Chats"
         },
         {
             id: 5,
-            name: "/inventory",
-            title: "Inventory"
+            name: "/sellers",
+            title: "Sellers"
         }
     ]
 
