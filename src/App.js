@@ -1,10 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
-
+import './App.scss';
+import Routing from './Routing/Routing';
 function App() {
   return (
-    <div className="App">
-      admin app kalai amma app
+    <div>
+      <Routing />
     </div>
   );
 }
