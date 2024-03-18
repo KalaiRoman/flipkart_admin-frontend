@@ -7,4 +7,5 @@ import Changepassword from './../components/Auth/Changepassword';
 import Products from './../components/Products/Products';
 import Orders from './../components/orders/Orders';
 import Inventory from './../components/Inventory/Inventory';
-export { Signin, Signup, Home, ForgetPassword, PagenotFound, Changepassword, Products, Orders,Inventory}
+import Chat from './../components/Chat/Chat';
+export { Signin, Signup, Home, ForgetPassword, PagenotFound, Changepassword, Products, Orders, Inventory, Chat }
