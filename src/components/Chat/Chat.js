@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { chatUserService, getAllusersService, getuserService } from '../../services/auth/auth_services';
+import { chatUserFilterService, chatUserService, getAllusersService, getuserService,chatPortfoliusers,getuserPortfolioChatService } from '../../services/auth/auth_services';
 import './Chat.scss';
 import { ToastSuccess } from '../../Middleware/Toastmodel/ToastModal';
 function Chat() {
     const [users, setUsers] = useState([]);
-
-    const [currentuserid, setCurrentUserId] = useState("");
+    const [currentuserid, setCurrentUserId] = useState(users[0]?._id);
     const [currentusers, setCurrentUsers] = useState({});
-
-    console.log(currentusers, 'currentusers')
-
+    const [currentuserChat, setCurrentuserChat] = useState([]);
+    const [Typeofusers, setTypeofUsers] = useState("");
 
     useEffect(() => {
         const datas = async () => {
@@ -23,6 +21,12 @@ function Chat() {
         }
         datas();
     }, []);
+
+    useEffect(() => {
+        if (users) {
+        }
+        
+    }, [users, currentuserid,Typeofusers])
 
     const datas = [
         {
@@ -47,22 +51,59 @@ function Chat() {
         }
     ];
 
+
+    const filterUsers=async(types)=>{
+try {
+    setTypeofUsers(types);
+    const data={
+        userType:Typeofusers
+    }
+    const response=await chatUserFilterService(data);
+
+    if(response)
+        {
+            setUsers(response?.user);
+        }
+    
+} catch (error) {
+    
+}
+    }
     const [message, setMessages] = useState("");
     const handleSumitmessage = async () => {
         try {
 
-            const data = {
-                message: message,
-                type: "sender",
-                userid: currentuserid
-            }
 
-            const response = await chatUserService(data);
-
-            if (response) {
-                ToastSuccess("success messages");
-                setMessages("");
-            }
+            if(Typeofusers=="portfoliouser")
+                {
+                    const data = {
+                        message: message,
+                        type: "receiver",
+                        userid:currentuserid
+                    }
+                    const response = await chatPortfoliusers(data);
+                    if (response) {
+                 
+                        setMessages("");
+                        setCurrentuserChat([...currentuserChat, data]);
+        
+                    }
+                }
+                else{
+                    const data = {
+                        message: message,
+                        type: "sender",
+                        userid: currentuserid
+                    }
+                    const response = await chatUserService(data);
+                    if (response) {
+                        ToastSuccess("success messages");
+                        setMessages("");
+                        setCurrentuserChat([...currentuserChat, data]);
+        
+                    }
+                }
+            
         } catch (error) {
 
         }
@@ -77,27 +118,59 @@ function Chat() {
                 userid: id
             }
 
-            const response = await getuserService(datas);
+            if(Typeofusers=="portfoliouser")
+            {
+                const response = await getuserPortfolioChatService(datas);
 
-            if (response) {
-                setCurrentUsers(response?.user);
+                if (response) {
+
+                    console.log(response,'response')
+                    setCurrentUsers(response?.user);
+                    setCurrentuserChat(response?.user?.chat);
+    
+                }
             }
+            else{
+                const response = await getuserService(datas);
+
+                if (response) {
+                    setCurrentUsers(response?.user);
+                    setCurrentuserChat(response?.user?.chat);
+    
+                }
+            }
+
+           
 
         } catch (error) {
 
         }
     }
+
+    console.log(currentuserChat,'users')
     return (
         <div className='main-chat w-[100%] mt-4 mb-5  overflow-hidden'>
             <div className='w-[100%] h-[100%] '>
                 <div className='flex w-[80%] mx-auto gap-1 h-[70vh]'>
                     <div className='w-[30%] border p-2'>
+                    <div className='d-flex gap-4 align-items-center'>
+                        <div>
+                            <button  onClick={()=>filterUsers("seller")} className='border p-3 rounded bg-orange-500 border-none w-auto text-white cursor-auto'>Sellers</button>
+                        </div>
+                        <div>
+                        <button onClick={()=>filterUsers("portfoliouser")} className='border p-3 rounded bg-green-500 border-none w-auto text-white cursor-auto'>Portfolio users</button>
+                        </div>
+                    </div>
                         {users?.map((item, index) => {
                             return (
-                                <div className={`border p-3 rounded cursor mt-2 mb-2 ${currentuserid == item?._id ? "border-color-red" : ""}`} key={index}>
+                                <div className={` p-3 rounded cursor mt-2 mb-2 ${currentuserid == item?._id ? "border-color-red" : "border"}`} key={index}>
                                     <div className={`flex gap-3 `} onClick={() => singleUserid(item?._id)}>
                                         <div className='w-[20%]'>
-                                            <img src={item?.avatar} alt="no image" className='w-[40px] h-[40px] rounded-full object-cover' />
+                                            {item && item?.avatar ? <>
+                                                <img src={item?.avatar} alt="no image" className='w-[40px] h-[40px] rounded-full object-cover' />
+                                            </> : <>
+                                                <img src={"https://static.vecteezy.com/system/resources/previews/027/312/393/original/portrait-of-a-call-center-woman-customer-service-isolated-essential-workers-avatar-icons-characters-for-social-media-user-profile-website-and-app-3d-render-illustration-png.png"} alt="no image" className='w-[40px] h-[40px] rounded-full object-cover' />
+                                            </>}
                                         </div>
                                         <div className='w-[80%]'>
                                             <div className='flex justify-between w-[100%] '>
@@ -120,7 +193,7 @@ function Chat() {
                                 {currentusers?.username}
                             </div>
                             <div className='h-[52%] border overflow-auto right-chat-box'>
-                                {currentusers?.chat?.map((item, index) => {
+                                {currentuserChat?.map((item, index) => {
                                     return (
                                         <div className='w-[100%]' key={index}>
                                             <div className={`${item?.type === "sender" ? "sender-message" : "receiver-message"}`} key={index}>
@@ -131,6 +204,8 @@ function Chat() {
                                         </div>
                                     )
                                 })}
+
+                                {currentuserChat?.length === 0 ? <div className='text-center d-flex align-items-center justify-center h-[100%]'>No Chat Here!!!</div> : null}
                             </div>
                             <div className='h-[10%] mt-2'>
                                 <div className='flex w-[100%] content-center align-items-center justify-center text-center'>

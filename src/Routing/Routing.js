@@ -1,10 +1,10 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Changepassword, Chat, ForgetPassword, Home, Inventory, Orders, PagenotFound, Products, Signin, Signup } from '../Pages/Pages';
+import { Changepassword, Chat, ForgetPassword, Home, Inventory, Orders, PagenotFound, ProductChat, Products, Signin, Signup } from '../Pages/Pages';
 import ProtectedRouter from '../Middleware/protectedRouter/ProtectedRouter';
 import TokenId from '../Middleware/token/TokenId';
 function Routing() {
-    const { toknname } = TokenId();
+    const toknname = localStorage.getItem("flip-token-ad");
 
     return (
         <Routes>
@@ -18,6 +18,8 @@ function Routing() {
                 <Route exact path="/orders" element={<Orders />}></Route>
                 <Route exact path="/sellers" element={<Inventory />}></Route>
                 <Route exact path="/chat" element={<Chat />}></Route>
+                <Route exact path="/productchat" element={<ProductChat />}></Route>
+
 
             </Route>
             <Route exact path="/*" element={<PagenotFound />}></Route>

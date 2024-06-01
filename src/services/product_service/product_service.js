@@ -1,17 +1,19 @@
 import instanceBaseurl from "../../Config/AxiosUrl";
 
-export async function createproductService(data) {
-    try {
-        const response = await instanceBaseurl.post(`/seller/product/create`, data);
-        return response.data;
-    } catch (err) {
-        throw err;
-    }
-}
+
 
 export async function getproductServices() {
     try {
-        const response = await instanceBaseurl.get(`/seller/product/getall`);
+        const response = await instanceBaseurl.post(`/admin/approval/products`);
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export async function approvalproductServices(data) {
+    try {
+        const response = await instanceBaseurl.post(`/admin/approval/product/approval`, data);
         return response.data;
     } catch (err) {
         throw err;
@@ -19,10 +21,20 @@ export async function getproductServices() {
 }
 
 
-export async function CurrentuserProductServices() {
+export async function rejectproductServices(data) {
     try {
-        const response = await instanceBaseurl.get(`/seller/product/getuser/seller/products`);
-        // ?page=1&size=10
+        const response = await instanceBaseurl.post(`/admin/approval/product/reject`, data);
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
+export async function chatProductServiceadmin(data) {
+    try {
+        const response = await instanceBaseurl.put(`/admin/approval/product/chat/`, data);
         return response.data;
     } catch (err) {
         throw err;
@@ -32,26 +44,7 @@ export async function CurrentuserProductServices() {
 
 export async function getCurrentsingleproductServices(id) {
     try {
-        const response = await instanceBaseurl.get(`/seller/product/getsingle/${id}`);
-        return response.data;
-    } catch (err) {
-        throw err;
-    }
-}
-
-
-export async function editProductService(id, data) {
-    try {
-        const response = await instanceBaseurl.put(`/seller/product/update/${id}`, data);
-        return response.data;
-    } catch (err) {
-        throw err;
-    }
-}
-
-export async function deleteProductService(id) {
-    try {
-        const response = await instanceBaseurl.delete(`/seller/product/delete/${id}`);
+        const response = await instanceBaseurl.get(`/admin/approval/get/product/${id}`);
         return response.data;
     } catch (err) {
         throw err;

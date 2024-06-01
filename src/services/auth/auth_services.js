@@ -25,6 +25,14 @@ export async function getuserService(id) {
     }
 }
 
+export async function getuserPortfolioChatService(id) {
+    try {
+        const response = await instanceBaseurl.post(`/admin/auth/get/portfolio`, id);
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
 export async function updateService(data) {
     try {
         const response = await instanceBaseurl.put(`/admin/auth/update`, data);
@@ -53,4 +61,24 @@ export async function chatUserService(data) {
         throw err;
     }
 }
+
+export async function chatUserFilterService(data) {
+    try {
+        const response = await instanceBaseurl.post(`/admin/auth/chat/user/filter`, data);
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export async function chatPortfoliusers(data) {
+    try {
+        const response = await instanceBaseurl.post(`/admin/auth/chat/admin-to-portfolio`, data);
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+
 

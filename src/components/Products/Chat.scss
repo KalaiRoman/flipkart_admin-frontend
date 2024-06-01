@@ -21,17 +21,21 @@
     .sender-messagess {
         display: flex;
         justify-content: flex-end;
-        margin: 10px 30px;
+        margin: 10px 20px;
         width: auto;
+        border: 2px solid #d1f4cc;
         border-top-left-radius: 30px;
         padding: 5px 20px;
+        background-color: #d1f4cc;
     }
     .receiver-messagess {
         display: flex;
         justify-content: flex-start;
-        margin: 10px 30px;
+        margin: 10px 20px;
+        border: 2px solid #f8e8ee;
         padding: 5px 20px;
         border-top-right-radius: 30px;
+        background-color: #f8e8ee;
     }
 }
 
