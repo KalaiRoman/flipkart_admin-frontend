@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { chatUserFilterService, chatUserService, getAllusersService, getuserService,chatPortfoliusers,getuserPortfolioChatService } from '../../services/auth/auth_services';
+import { chatUserFilterService, chatUserService, getAllusersService, chatPortfoliusersUpdateStatus,getuserService,chatPortfoliusers,getPortfolioUsers,getuserPortfolioChatService } from '../../services/auth/auth_services';
 import './Chat.scss';
 import { ToastSuccess } from '../../Middleware/Toastmodel/ToastModal';
 function Chat() {
@@ -20,7 +20,7 @@ function Chat() {
             }
         }
         datas();
-    }, []);
+    }, [Typeofusers,currentuserChat]);
 
     useEffect(() => {
         if (users) {
@@ -55,15 +55,26 @@ function Chat() {
     const filterUsers=async(types)=>{
 try {
     setTypeofUsers(types);
-    const data={
-        userType:Typeofusers
-    }
-    const response=await chatUserFilterService(data);
 
-    if(response)
+    if(Typeofusers=="portfoliouser")
         {
-            setUsers(response?.user);
+            const response=await getPortfolioUsers();
+            if(response)
+                {
+                    setUsers(response?.user);
+                }
         }
+        else
+        {
+            const response=await chatUserFilterService();
+
+            if(response)
+                {
+                    setUsers(response?.user);
+                }
+        }
+  
+   
     
 } catch (error) {
     
@@ -82,8 +93,14 @@ try {
                         userid:currentuserid
                     }
                     const response = await chatPortfoliusers(data);
+
+                    
+                    const list={
+                        userid:currentuserid,
+                        type:"sender"
+                    }
+                    await chatPortfoliusersUpdateStatus(list);
                     if (response) {
-                 
                         setMessages("");
                         setCurrentuserChat([...currentuserChat, data]);
         
@@ -95,7 +112,10 @@ try {
                         type: "sender",
                         userid: currentuserid
                     }
+                    
                     const response = await chatUserService(data);
+
+                
                     if (response) {
                         ToastSuccess("success messages");
                         setMessages("");
@@ -121,22 +141,22 @@ try {
             if(Typeofusers=="portfoliouser")
             {
                 const response = await getuserPortfolioChatService(datas);
-
                 if (response) {
-
-                    console.log(response,'response')
                     setCurrentUsers(response?.user);
                     setCurrentuserChat(response?.user?.chat);
-    
+                    const list={
+                        userid:currentuserid,
+                        type:"sender"
+                    }
+                    await chatPortfoliusersUpdateStatus(list);
                 }
             }
             else{
                 const response = await getuserService(datas);
-
                 if (response) {
                     setCurrentUsers(response?.user);
                     setCurrentuserChat(response?.user?.chat);
-    
+                  
                 }
             }
 
@@ -147,7 +167,11 @@ try {
         }
     }
 
-    console.log(currentuserChat,'users')
+
+    useEffect(()=>{
+
+    },[currentuserChat,currentuserid,users,currentusers])
+    console.log(currentuserChat,users,'currentuserChat')
     return (
         <div className='main-chat w-[100%] mt-4 mb-5  overflow-hidden'>
             <div className='w-[100%] h-[100%] '>
