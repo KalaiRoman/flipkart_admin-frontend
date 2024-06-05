@@ -83,8 +83,6 @@ try {
     const [message, setMessages] = useState("");
     const handleSumitmessage = async () => {
         try {
-
-
             if(Typeofusers=="portfoliouser")
                 {
                     const data = {
